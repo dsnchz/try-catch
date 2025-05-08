@@ -1,62 +1,70 @@
-<p>
-  <img width="100%" src="https://assets.solidjs.com/banner?type=Ecosystem&background=tiles&project=library-name" alt="solid-create-script">
-</p>
+# @dschz/try-catch
 
-# Template: SolidJS Library
+> A tiny utility to wrap promises or async functions and return a `[error, data]` tuple — no more `try/catch` boilerplate.
 
-Template for [SolidJS](https://www.solidjs.com/) library package. Bundling of the library is managed by [tsup](https://tsup.egoist.dev/).
+## ✨ Features
 
-Other things configured include:
+- ✅ Supports both async functions and raw promises
+- ✅ Catches both **sync and async** errors
+- ✅ Strongly typed result via `Result<T, E>`
+- ✅ Zero dependencies — just TypeScript
 
-- Bun (for dependency management and running scripts)
-- TypeScript
-- ESLint / Prettier
-- Solid Testing Library + Vitest (for testing)
-- Playground app using library
-- GitHub Actions (for all CI/CD)
-
-## Getting Started
-
-Some pre-requisites before install dependencies:
-
-- Install Node Version Manager (NVM)
-  ```bash
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-  ```
-- Install Bun
-  ```bash
-  curl -fsSL https://bun.sh/install | bash
-  ```
-
-### Installing Dependencies
+## 📆 Installation
 
 ```bash
-nvm use
-bun install
+npm install @dschz/try-catch
+pnpm install @dschz/try-catch
+yarn install @dschz/try-catch
+bun install @dschz/try-catch
 ```
 
-### Local Development Build
+## 🚀 Usage
 
-```bash
-bun start
+```ts
+import { tryCatch } from "@dschz/try-catch";
+
+const [err, data] = await tryCatch(fetch("/api/data"));
+
+if (err) {
+  console.error("Something went wrong:", err);
+} else {
+  console.log("Data:", data);
+}
 ```
 
-### Linting & Formatting
+You can also pass a function that returns a promise:
 
-```bash
-bun run lint    # checks source for lint violations
-bun run format  # checks source for format violations
-
-bun run lint:fix    # fixes lint violations
-bun run format:fix  # fixes format violations
+```ts
+const [err, user] = await tryCatch(() => fetchUserById(123));
 ```
 
-### Contributing
+## 🧠 Types
 
-The only requirements when contributing are:
+```ts
+type Success<T> = [error: null, data: T];
+type Failure<E extends Error = Error> = [error: E, data: null];
+type Result<T, E extends Error = Error> = Success<T> | Failure<E>;
+```
 
-- You keep a clean git history in your branch
-  - rebasing `main` instead of making merge commits.
-- Using proper commit message formats that adhere to [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
-  - Additionally, squashing (via rebase) commits that are not [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
-- CI checks pass before merging into `main`
+The return value is a tuple:
+
+```ts
+[error, data]; // One will always be null
+```
+
+## 🧪 Example with Custom Error Types
+
+```ts
+class MyError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "MyError";
+  }
+}
+
+const [err, data] = await tryCatch<MyType, MyError>(() => doSomething());
+```
+
+## 📄 License
+
+MIT © [@dschz](https://github.com/thedanchez)
