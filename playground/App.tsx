@@ -1,19 +1,34 @@
-import { createSignal } from "solid-js";
+import { createResource, For, Show } from "solid-js";
+
+import { tryCatch } from "../src";
+
+type Post = {
+  readonly id: number;
+  readonly userId: number;
+  readonly title: string;
+  readonly body: string;
+};
+
+const fetchPosts = async () => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+  return response.json();
+};
+
+const getData = async () => {
+  const [error, data] = await tryCatch<Post[]>(fetchPosts);
+  if (error) throw error;
+  return data;
+};
 
 export const App = () => {
-  const [count, setCount] = createSignal(0);
+  const [data] = createResource(getData);
 
   return (
     <div>
       <div>Playground App</div>
-      <div>Count: {count()}</div>
-      <button
-        onClick={() => {
-          setCount((prev) => prev + 1);
-        }}
-      >
-        Increment Count
-      </button>
+      <Show when={data()} fallback={<div>Loading data</div>}>
+        {(posts) => <For each={posts()}>{(post) => <div>{post.title}</div>}</For>}
+      </Show>
     </div>
   );
 };

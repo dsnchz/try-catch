@@ -4,7 +4,7 @@ import { defineConfig as defineViteConfig, mergeConfig } from "vite";
 import solidPlugin from "vite-plugin-solid";
 import { configDefaults, defineConfig as defineVitestConfig } from "vitest/config";
 
-const TEST_EXCLUDES = [...configDefaults.exclude, "src/index.tsx"];
+const TEST_EXCLUDES = [...configDefaults.exclude, "playground"];
 const COVERAGE_EXCLUDE = [...TEST_EXCLUDES, "**/*.test.{ts,tsx}"];
 
 const viteConfig = defineViteConfig({
