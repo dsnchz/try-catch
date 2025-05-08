@@ -1,5 +1,11 @@
 # @dschz/try-catch
 
+## 1.0.2
+
+### Patch Changes
+
+- Fixes package exports
+
 ## 1.0.1
 
 ### Patch Changes
