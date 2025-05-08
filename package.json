@@ -1,6 +1,6 @@
 {
   "name": "@dschz/try-catch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple try-catch utility function for JavaScript",
   "type": "module",
   "author": "Daniel Sanchez <dsanc89@pm.me>",
