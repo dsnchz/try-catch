@@ -1,11 +1,15 @@
 {
   "name": "@dschz/try-catch",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simple try-catch utility function for JavaScript",
   "type": "module",
   "author": "Daniel Sanchez <dsanc89@pm.me>",
   "license": "MIT",
   "homepage": "https://github.com/dsnchz/try-catch#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dsnchz/try-catch.git"
+  },
   "bugs": {
     "url": "https://github.com/dsnchz/try-catch/issues"
   },

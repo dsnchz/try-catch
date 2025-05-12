@@ -1,5 +1,11 @@
 # @dschz/try-catch
 
+## 1.0.3
+
+### Patch Changes
+
+- updates jsr config to only upload necessary files
+
 ## 1.0.2
 
 ### Patch Changes
