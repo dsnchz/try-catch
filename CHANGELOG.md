@@ -1,5 +1,11 @@
 # @dschz/try-catch
 
+## 1.1.0
+
+### Minor Changes
+
+- updates signature to accept synchronous functions
+
 ## 1.0.3
 
 ### Patch Changes
