@@ -3,6 +3,40 @@ import { describe, expect, it } from "vitest";
 import { tryCatch } from "../index";
 
 describe("UTIL FUNCTION: tryCatch", () => {
+  // Sync values
+  it("handles sync functions that return values", async () => {
+    const [err, data] = await tryCatch(() => JSON.parse('{"a":1}'));
+    expect(err).toBeNull();
+    expect(data).toEqual({ a: 1 });
+  });
+
+  it("handles sync function that throws", async () => {
+    const [err, data] = await tryCatch(() => JSON.parse("{ a: 1 }")); // invalid JSON (unquoted key)
+    expect(err).toBeInstanceOf(SyntaxError);
+    expect(err?.message).toContain("Expected property name or '}' in JSON at position 2");
+    expect(data).toBeNull();
+  });
+
+  it("handles sync functions that throw errors", async () => {
+    const [err, data] = await tryCatch(() => {
+      throw new RangeError("Out of bounds");
+    });
+    expect(err).toBeInstanceOf(RangeError);
+    expect(err?.message).toBe("Out of bounds");
+    expect(data).toBeNull();
+  });
+
+  it("handles sync functions that throw non-Error values", async () => {
+    const [err, data] = await tryCatch(() => {
+      throw "sync oops";
+    });
+    expect(err).toBeInstanceOf(Error);
+    expect(err?.message).toBe("sync oops");
+    expect(data).toBeNull();
+  });
+
+  // Async values
+
   it("handles resolved promises correctly", async () => {
     const [err, data] = await tryCatch(Promise.resolve(42));
     expect(err).toBeNull();
