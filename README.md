@@ -20,22 +20,41 @@ bun install @dschz/try-catch
 
 ## 🚀 Usage
 
+### Wrapping a promise result
+
 ```ts
 import { tryCatch } from "@dschz/try-catch";
 
-const [err, data] = await tryCatch(fetch("/api/data"));
-
-if (err) {
-  console.error("Something went wrong:", err);
-} else {
-  console.log("Data:", data);
-}
+const [err, res] = await tryCatch(fetch("/api/data"));
 ```
 
-You can also pass a function that returns a promise:
+### Wrapping an async function
 
 ```ts
 const [err, user] = await tryCatch(() => fetchUserById(123));
+```
+
+### Wrapping a sync function that might throw
+
+```ts
+const [err, parsed] = await tryCatch(() => JSON.parse('{"valid":true}'));
+
+if (err) {
+  console.error("Invalid JSON:", err.message);
+}
+```
+
+## Note
+
+⚠️ Always wrap expressions that might throw in a function.
+This ensures the error is caught inside the try-catch scope.
+
+```ts
+// ✅ CORRECT
+await tryCatch(() => JSON.parse("{ malformed }"));
+
+// ❌ INCORRECT — throws before tryCatch is even called
+await tryCatch(JSON.parse("{ malformed }"));
 ```
 
 ## 🧠 Types
@@ -67,4 +86,4 @@ const [err, data] = await tryCatch<MyType, MyError>(() => doSomething());
 
 ## 📄 License
 
-MIT © [@dschz](https://github.com/thedanchez)
+MIT © [Daniel Sanchez](https://github.com/thedanchez)
