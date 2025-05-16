@@ -1,5 +1,11 @@
 # @dschz/try-catch
 
+## 1.1.1
+
+### Patch Changes
+
+- updates readme with more examples
+
 ## 1.1.0
 
 ### Minor Changes
