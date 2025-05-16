@@ -13,12 +13,29 @@
   "bugs": {
     "url": "https://github.com/dsnchz/try-catch/issues"
   },
-  "files": [
-    "dist"
-  ],
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "try-catch",
+    "try catch",
+    "error handling",
+    "safe await",
+    "promise wrapper",
+    "tuple result",
+    "sync async utility",
+    "non-throwing",
+    "typescript",
+    "javascript",
+    "await error",
+    "error tuple",
+    "error-first",
+    "safe function wrapper",
+    "try-catch utility"
+  ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
