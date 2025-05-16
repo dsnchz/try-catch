@@ -1,5 +1,11 @@
 # @dschz/try-catch
 
+## 1.1.2
+
+### Patch Changes
+
+- updates package keywords for better discoverability
+
 ## 1.1.1
 
 ### Patch Changes
