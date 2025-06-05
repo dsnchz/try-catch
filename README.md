@@ -1,5 +1,11 @@
 # @dschz/try-catch
 
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![npm](https://img.shields.io/npm/v/@dschz/try-catch?color=blue)](https://www.npmjs.com/package/@dschz/try-catch)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@dschz/try-catch)](https://bundlephobia.com/package/@dschz/try-catch)
+[![JSR](https://jsr.io/badges/@dschz/try-catch/score)](https://jsr.io/@dschz/try-catch)
+[![CI](https://github.com/dsnchz/try-catch/actions/workflows/ci.yaml/badge.svg)](https://github.com/dsnchz/try-catch/actions/workflows/ci.yaml)
+
 > A tiny utility to wrap promises or async functions and return a `[error, data]` tuple — no more `try/catch` boilerplate.
 
 ## ✨ Features
