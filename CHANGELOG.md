@@ -1,5 +1,11 @@
 # @dschz/try-catch
 
+## 1.1.3
+
+### Patch Changes
+
+- Adds badges to readme
+
 ## 1.1.2
 
 ### Patch Changes
