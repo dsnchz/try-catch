@@ -1,5 +1,11 @@
 # @dschz/try-catch
 
+## 1.2.1
+
+### Patch Changes
+
+- Address CI lint issues
+
 ## 1.2.0
 
 ### Minor Changes
