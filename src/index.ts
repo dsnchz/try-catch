@@ -1,17 +1,6 @@
-type Success<T> = [error: null, data: T];
-type Failure<E extends Error = Error> = [error: E, data: null];
-type Result<T, E extends Error = Error> = Success<T> | Failure<E>;
-
-type SyncFn<T> = () => T;
-type AsyncFn<T> = () => Promise<T>;
-
-/**
- * Acceptable input types for `tryCatch`:
- * - A synchronous function that might throw
- * - An async function (returns a promise)
- * - A promise (e.g. from `fetch()`)
- */
-type TryCatchInput<T> = SyncFn<T> | AsyncFn<T> | Promise<T>;
+export type Success<T> = [error: null, data: T];
+export type Failure<E extends Error = Error> = [error: E, data: null];
+export type Result<T, E extends Error = Error> = Success<T> | Failure<E>;
 
 /**
  * Wraps a potentially throwing function or a promise and returns a tuple `[error, data]`.
@@ -21,22 +10,55 @@ type TryCatchInput<T> = SyncFn<T> | AsyncFn<T> | Promise<T>;
  *
  * ```ts
  * // ✅ Synchronous function that may throw
- * const [err, data] = await tryCatch(() => JSON.parse("{ \"a\": 1 }"));
+ * const [err, data] = tryCatch(() => JSON.parse("{ \"a\": 1 }"));
  *
  * // ✅ Async function
- * const [err, data] = await tryCatch(() => fetch("/api/data").then(r => r.json()));
+ * const [err, data] = await tryCatch(async () => fetchData());
  *
  * // ✅ Direct promise
  * const [err, data] = await tryCatch(fetch("/api/data"));
  * ```
  */
-export async function tryCatch<T, E extends Error = Error>(
-  input: TryCatchInput<T>,
-): Promise<Result<T, E>> {
-  try {
-    const result = typeof input === "function" ? await input() : await input;
+// Overload: Direct Promise
+export function tryCatch<T, E extends Error = Error>(input: Promise<T>): Promise<Result<T, E>>;
+// Overload: Sync function that returns non-Promise
+export function tryCatch<T, E extends Error = Error>(
+  input: () => Exclude<T, Promise<unknown>>,
+): Result<T, E>;
+// Overload: Async function returning Promise
+export function tryCatch<T, E extends Error = Error>(
+  input: () => Promise<T>,
+): Promise<Result<T, E>>;
+// Implementation
+export function tryCatch<T, E extends Error = Error>(
+  input: (() => T | Promise<T>) | Promise<T>,
+): Result<T, E> | Promise<Result<T, E>> {
+  // Handle direct promises
+  if (input instanceof Promise) {
+    return input
+      .then((data): Result<T, E> => [null, data])
+      .catch((e): Result<T, E> => {
+        const error = e instanceof Error ? e : new Error(String(e), { cause: e });
+        return [error as E, null];
+      });
+  }
 
-    return [null, result];
+  // Handle functions
+  try {
+    const result = input();
+
+    // If result is a promise, handle it asynchronously
+    if (result instanceof Promise) {
+      return result
+        .then((data): Result<T, E> => [null, data])
+        .catch((e): Result<T, E> => {
+          const error = e instanceof Error ? e : new Error(String(e), { cause: e });
+          return [error as E, null];
+        });
+    }
+
+    // Synchronous result
+    return [null, result] as Result<T, E>;
   } catch (e) {
     const error = e instanceof Error ? e : new Error(String(e), { cause: e });
     return [error as E, null];

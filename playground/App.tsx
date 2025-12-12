@@ -11,11 +11,11 @@ type Post = {
 
 const fetchPosts = async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-  return response.json();
+  return response.json() as Promise<Post[]>;
 };
 
 const getData = async () => {
-  const [error, data] = await tryCatch<Post[]>(fetchPosts);
+  const [error, data] = await tryCatch(fetchPosts);
   if (error) throw error;
   return data;
 };
