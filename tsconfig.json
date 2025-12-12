@@ -13,7 +13,6 @@
     "moduleDetection": "force",
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-
     /* Strictness */
     "strict": true,
     "allowUnreachableCode": false,
@@ -22,13 +21,11 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-
     /* JSX */
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-
     /* Types */
-    "types": ["vite/client", "bun-types", "@testing-library/jest-dom"]
+    "types": ["vite/client", "bun-types"]
   },
   "exclude": ["node_modules", "coverage", "dist"]
 }

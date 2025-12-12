@@ -1,6 +1,7 @@
 import js from "@eslint/js";
 import { defineConfig } from "eslint/config";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
+import solid from "eslint-plugin-solid/configs/typescript";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -72,6 +73,37 @@ export default defineConfig([
             "Enums are not allowed in this project. Use union types or plain objects instead.",
         },
       ],
+    },
+  },
+  //
+  // ────────────────────────────────
+  // 4️⃣ SolidJS + TypeScript
+  // ────────────────────────────────
+  //
+  {
+    files: ["playground/**/*.ts", "playground/**/*.tsx"],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        sourceType: "module",
+        project: "./tsconfig.json",
+        ecmaFeatures: { jsx: true },
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.es2022,
+      },
+    },
+    plugins: {
+      solid: {
+        meta: solid.plugins.solid.meta,
+        // @ts-expect-error — Solid config typing is a bit off
+        rules: solid.plugins.solid.rules,
+      },
+    },
+    rules: {
+      ...solid.rules,
+      "@typescript-eslint/no-non-null-assertion": "off",
     },
   },
   //
