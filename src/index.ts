@@ -1,32 +1,51 @@
+/* eslint-disable @typescript-eslint/unified-signatures */
 export type Success<T> = [error: null, data: T];
 export type Failure<E extends Error = Error> = [error: E, data: null];
 export type Result<T, E extends Error = Error> = Success<T> | Failure<E>;
 
 /**
- * Wraps a potentially throwing function or a promise and returns a tuple `[error, data]`.
- * Catches both sync and async errors, and wraps non-Error throws into an `Error` object.
+ * Wraps a promise and returns a tuple `[error, data]`.
  *
- * ## Examples
+ * @template T - The resolved type of the promise
+ * @template E - The error type, defaults to `Error`
+ * @param input - A promise to wrap
+ * @returns A promise resolving to `[null, data]` on success or `[error, null]` on failure
  *
+ * @example
  * ```ts
- * // ✅ Synchronous function that may throw
- * const [err, data] = tryCatch(() => JSON.parse("{ \"a\": 1 }"));
- *
- * // ✅ Async function
- * const [err, data] = await tryCatch(async () => fetchData());
- *
- * // ✅ Direct promise
  * const [err, data] = await tryCatch(fetch("/api/data"));
  * ```
  */
-/* eslint-disable @typescript-eslint/unified-signatures */
-// Overload: Direct Promise
 export function tryCatch<T, E extends Error = Error>(input: Promise<T>): Promise<Result<T, E>>;
-// Overload: Sync function that returns non-Promise
+/**
+ * Wraps a synchronous function and returns a tuple `[error, data]`.
+ *
+ * @template T - The return type of the function
+ * @template E - The error type, defaults to `Error`
+ * @param input - A synchronous function that may throw
+ * @returns `[null, data]` on success or `[error, null]` on failure
+ *
+ * @example
+ * ```ts
+ * const [err, data] = tryCatch(() => JSON.parse('{"a":1}'));
+ * ```
+ */
 export function tryCatch<T, E extends Error = Error>(
   input: () => Exclude<T, Promise<unknown>>,
 ): Result<T, E>;
-// Overload: Async function returning Promise
+/**
+ * Wraps an async function and returns a tuple `[error, data]`.
+ *
+ * @template T - The resolved type of the returned promise
+ * @template E - The error type, defaults to `Error`
+ * @param input - An async function or a function returning a promise
+ * @returns A promise resolving to `[null, data]` on success or `[error, null]` on failure
+ *
+ * @example
+ * ```ts
+ * const [err, data] = await tryCatch(async () => fetchData());
+ * ```
+ */
 export function tryCatch<T, E extends Error = Error>(
   input: () => Promise<T>,
 ): Promise<Result<T, E>>;
