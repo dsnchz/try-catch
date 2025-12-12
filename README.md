@@ -6,78 +6,116 @@
 [![JSR](https://jsr.io/badges/@dschz/try-catch/score)](https://jsr.io/@dschz/try-catch)
 [![CI](https://github.com/dsnchz/try-catch/actions/workflows/ci.yaml/badge.svg)](https://github.com/dsnchz/try-catch/actions/workflows/ci.yaml)
 
-> A tiny utility to wrap promises or async functions and return a `[error, data]` tuple — no more `try/catch` boilerplate.
+> A tiny utility to wrap functions or promises and return a `[error, data]` tuple — no more `try/catch` boilerplate.
 
-## ✨ Features
+## Features
 
-- ✅ Supports both async functions and raw promises
-- ✅ Catches both **sync and async** errors
-- ✅ Strongly typed result via `Result<T, E>`
-- ✅ Zero dependencies — just TypeScript
+- Supports synchronous functions, async functions, and direct promises
+- Returns the appropriate type based on input — no unnecessary `await` for sync functions
+- Strongly typed with exported `Result<T, E>`, `Success<T>`, and `Failure<E>` types
+- Non-Error throws are automatically wrapped in an `Error` with `cause`
+- Zero dependencies
 
-## 📆 Installation
+## Installation
 
 ```bash
 npm install @dschz/try-catch
-pnpm install @dschz/try-catch
-yarn install @dschz/try-catch
-bun install @dschz/try-catch
+pnpm add @dschz/try-catch
+yarn add @dschz/try-catch
+bun add @dschz/try-catch
 ```
 
-## 🚀 Usage
+## Usage
 
-### Wrapping a promise result
+### Synchronous functions
+
+Returns `Result<T, E>` directly:
 
 ```ts
 import { tryCatch } from "@dschz/try-catch";
 
-const [err, res] = await tryCatch(fetch("/api/data"));
+// Parse JSON
+const [err, data] = tryCatch(() => JSON.parse('{"a":1}'));
+
+// Functions that throw
+const [err, data] = tryCatch(() => {
+  throw new RangeError("Out of bounds");
+});
+
+// Non-Error throws are wrapped in Error with cause
+const [err, data] = tryCatch(() => {
+  throw "string error";
+});
+// err.message === "string error", err.cause === "string error"
 ```
 
-### Wrapping an async function
+### Async functions
+
+Returns `Promise<Result<T, E>>`:
 
 ```ts
-const [err, user] = await tryCatch(() => fetchUserById(123));
+const [err, data] = await tryCatch(async () => {
+  const res = await fetch("/api");
+  return res.json();
+});
 ```
 
-### Wrapping a sync function that might throw
+### Direct promises
+
+Returns `Promise<Result<T, E>>`:
 
 ```ts
-const [err, parsed] = await tryCatch(() => JSON.parse('{"valid":true}'));
-
-if (err) {
-  console.error("Invalid JSON:", err.message);
-}
+const [err, data] = await tryCatch(fetch("/api/data"));
+const [err, data] = await tryCatch(Promise.resolve(42));
+const [err, data] = await tryCatch(Promise.reject(new Error("fail")));
 ```
 
-## Note
+### Promise chains
 
-⚠️ Always wrap expressions that might throw in a function.
-This ensures the error is caught inside the try-catch scope.
+Returns `Promise<Result<T, E>>`:
 
 ```ts
-// ✅ CORRECT
-await tryCatch(() => JSON.parse("{ malformed }"));
-
-// ❌ INCORRECT — throws before tryCatch is even called
-await tryCatch(JSON.parse("{ malformed }"));
+const [err, data] = await tryCatch(() => fetch("/api").then((r) => r.json()));
 ```
 
-## 🧠 Types
+## Important Note
+
+Always wrap expressions that might throw in a function. This ensures the error is caught inside the try-catch scope:
 
 ```ts
+// CORRECT
+tryCatch(() => JSON.parse("{ malformed }"));
+
+// INCORRECT — JSON.parse evaluates and throws before tryCatch is even called
+tryCatch(JSON.parse("{ malformed }"));
+```
+
+## Types
+
+All types are exported for use in your own type definitions:
+
+```ts
+import { tryCatch, Result, Success, Failure } from "@dschz/try-catch";
+
 type Success<T> = [error: null, data: T];
 type Failure<E extends Error = Error> = [error: E, data: null];
 type Result<T, E extends Error = Error> = Success<T> | Failure<E>;
 ```
 
-The return value is a tuple:
+The return value is a tuple where one value will always be `null`:
 
 ```ts
-[error, data]; // One will always be null
+const [error, data] = tryCatch(() => someOperation());
+
+if (error) {
+  // handle error
+  return;
+}
+
+// data is available here
 ```
 
-## 🧪 Example with Custom Error Types
+## Custom Error Types
 
 ```ts
 class MyError extends Error {
@@ -87,9 +125,9 @@ class MyError extends Error {
   }
 }
 
-const [err, data] = await tryCatch<MyType, MyError>(() => doSomething());
+const [err, data] = await tryCatch<MyType, MyError>(async () => doSomething());
 ```
 
-## 📄 License
+## License
 
 MIT © [Daniel Sanchez](https://github.com/thedanchez)
