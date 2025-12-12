@@ -1,16 +1,30 @@
 import js from "@eslint/js";
+import { defineConfig } from "eslint/config";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
-import solid from "eslint-plugin-solid/configs/typescript";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+export default defineConfig([
+  //
+  // ────────────────────────────────
+  // 1️⃣ Ignored paths (like .eslintignore)
+  // ────────────────────────────────
+  //
   {
-    // config with just ignores is the replacement for `.eslintignore`
     ignores: ["**/build/**", "**/coverage/**", "**/dist/**", "**/node_modules/**"],
   },
+  //
+  // ────────────────────────────────
+  // 2️⃣ Base recommended rules
+  // ────────────────────────────────
+  //
   js.configs.recommended,
   tseslint.configs.strict,
+  //
+  // ────────────────────────────────
+  // 3️⃣ Import sorting
+  // ────────────────────────────────
+  //
   {
     plugins: {
       "simple-import-sort": simpleImportSort,
@@ -20,37 +34,51 @@ export default tseslint.config(
       "simple-import-sort/exports": "error",
     },
   },
+  //
+  // ────────────────────────────────
+  // 3️⃣ TypeScript (General - Base rules)
+  // ────────────────────────────────
+  //
   {
     files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
         sourceType: "module",
-        project: "./tsconfig.json",
-        ecmaFeatures: {
-          jsx: true,
-        },
       },
       globals: {
         ...globals.browser,
         ...globals.es2022,
+        ...globals.node,
       },
     },
-    plugins: solid.plugins,
     rules: {
-      ...solid.rules,
+      "@typescript-eslint/consistent-type-definitions": ["error", "type"],
       "@typescript-eslint/no-non-null-assertion": "off",
-      "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
-          varsIgnorePattern: "^_",
+          args: "after-used",
           argsIgnorePattern: "^_",
-          destructuredArrayIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "TSEnumDeclaration",
+          message:
+            "Enums are not allowed in this project. Use union types or plain objects instead.",
         },
       ],
     },
   },
+  //
+  // ────────────────────────────────
+  // 5️⃣ Test environment
+  // ────────────────────────────────
+  //
   {
     files: ["__tests__/**/*.ts", "__tests__/**/*.tsx"],
     languageOptions: {
@@ -60,4 +88,4 @@ export default tseslint.config(
       },
     },
   },
-);
+]);
