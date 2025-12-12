@@ -19,6 +19,7 @@ export type Result<T, E extends Error = Error> = Success<T> | Failure<E>;
  * const [err, data] = await tryCatch(fetch("/api/data"));
  * ```
  */
+/* eslint-disable @typescript-eslint/unified-signatures */
 // Overload: Direct Promise
 export function tryCatch<T, E extends Error = Error>(input: Promise<T>): Promise<Result<T, E>>;
 // Overload: Sync function that returns non-Promise
@@ -29,6 +30,7 @@ export function tryCatch<T, E extends Error = Error>(
 export function tryCatch<T, E extends Error = Error>(
   input: () => Promise<T>,
 ): Promise<Result<T, E>>;
+/* eslint-enable @typescript-eslint/unified-signatures */
 // Implementation
 export function tryCatch<T, E extends Error = Error>(
   input: (() => T | Promise<T>) | Promise<T>,
