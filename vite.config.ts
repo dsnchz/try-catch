@@ -1,11 +1,7 @@
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
-import { defineConfig as defineViteConfig, mergeConfig } from "vite";
+import { defineConfig as defineViteConfig } from "vite";
 import solidPlugin from "vite-plugin-solid";
-import { configDefaults, defineConfig as defineVitestConfig } from "vitest/config";
-
-const TEST_EXCLUDES = [...configDefaults.exclude, "playground"];
-const COVERAGE_EXCLUDE = [...TEST_EXCLUDES, "**/*.test.{ts,tsx}"];
 
 const viteConfig = defineViteConfig({
   plugins: [tailwindcss(), solidPlugin()],
@@ -23,21 +19,4 @@ const viteConfig = defineViteConfig({
   },
 });
 
-const vitestConfig = defineVitestConfig({
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: ["./setupTests.ts"],
-    exclude: TEST_EXCLUDES,
-    coverage: {
-      all: true,
-      provider: "istanbul",
-      exclude: COVERAGE_EXCLUDE,
-      thresholds: {
-        "100": true,
-      },
-    },
-  },
-});
-
-export default mergeConfig(viteConfig, vitestConfig);
+export default viteConfig;

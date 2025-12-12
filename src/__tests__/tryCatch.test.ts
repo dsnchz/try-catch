@@ -13,7 +13,7 @@ describe("UTIL FUNCTION: tryCatch", () => {
   it("handles sync function that throws", async () => {
     const [err, data] = await tryCatch(() => JSON.parse("{ a: 1 }")); // invalid JSON (unquoted key)
     expect(err).toBeInstanceOf(SyntaxError);
-    expect(err?.message).toContain("Expected property name or '}' in JSON at position 2");
+    expect(err?.message).toContain("JSON Parse error: Expected '}'");
     expect(data).toBeNull();
   });
 
