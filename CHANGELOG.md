@@ -1,5 +1,11 @@
 # @dschz/try-catch
 
+## 1.2.2
+
+### Patch Changes
+
+- Fixes broken CI and updates readme
+
 ## 1.2.1
 
 ### Patch Changes
