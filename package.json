@@ -2,57 +2,57 @@
   "name": "@dschz/try-catch",
   "version": "1.2.2",
   "description": "Simple try-catch utility function for JavaScript",
-  "type": "module",
-  "author": "Daniel Sanchez <dsanc89@pm.me>",
-  "license": "MIT",
+  "keywords": [
+    "await error",
+    "error handling",
+    "error tuple",
+    "error-first",
+    "javascript",
+    "non-throwing",
+    "promise wrapper",
+    "safe await",
+    "safe function wrapper",
+    "sync async utility",
+    "try catch",
+    "try-catch",
+    "try-catch utility",
+    "tuple result",
+    "typescript"
+  ],
   "homepage": "https://github.com/dsnchz/try-catch#readme",
+  "bugs": {
+    "url": "https://github.com/dsnchz/try-catch/issues"
+  },
+  "license": "MIT",
+  "author": "Daniel Sanchez <dsanc89@pm.me>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dsnchz/try-catch.git"
   },
-  "bugs": {
-    "url": "https://github.com/dsnchz/try-catch/issues"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
   "files": [
     "dist"
   ],
-  "keywords": [
-    "try-catch",
-    "try catch",
-    "error handling",
-    "safe await",
-    "promise wrapper",
-    "tuple result",
-    "sync async utility",
-    "non-throwing",
-    "typescript",
-    "javascript",
-    "await error",
-    "error tuple",
-    "error-first",
-    "safe function wrapper",
-    "try-catch utility"
-  ],
+  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "browser": {},
+  "types": "./dist/index.d.ts",
+  "typesVersions": {},
   "exports": {
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
   },
-  "typesVersions": {},
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup",
     "build:watch": "tsup --watch",
     "dev": "vite",
-    "format": "prettier . --check",
-    "format:fix": "prettier . --write",
+    "format": "oxfmt --check",
+    "format:fix": "oxfmt",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "pkg:changeset": "changeset",
@@ -74,7 +74,7 @@
     "globals": "17.7.0",
     "jiti": "2.7.0",
     "jsdom": "29.1.1",
-    "prettier": "3.9.6",
+    "oxfmt": "^0.60.0",
     "tsup": "8.5.1",
     "typescript": "5.9.3",
     "typescript-eslint": "8.65.0",
